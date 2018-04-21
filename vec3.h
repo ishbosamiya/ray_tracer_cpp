@@ -19,28 +19,28 @@ class Vec3
 
         float operator[] (int i) {return m_elements[i];}
 
-        inline Vec3& operator+= (const Vec3 &v3);
-        inline Vec3& operator-= (const Vec3 &v3);
-        inline Vec3& operator*= (const Vec3 &v3);
-        inline Vec3& operator/= (const Vec3 &v3);
-        inline Vec3& operator*= (const float scalar);
-        inline Vec3& operator/= (const float scalar);
+        Vec3& operator+= (const Vec3 &v3);
+        Vec3& operator-= (const Vec3 &v3);
+        Vec3& operator*= (const Vec3 &v3);
+        Vec3& operator/= (const Vec3 &v3);
+        Vec3& operator*= (const float scalar);
+        Vec3& operator/= (const float scalar);
 
-        inline float length();
-        inline float squaredLength();
-        inline Vec3 normalized();
+        float length();
+        float squaredLength();
+        Vec3 normalized();
 
-        inline Vec3 operator+ (const Vec3 &v3_1);
-        inline Vec3 operator- (const Vec3 &v3_1);
-        inline Vec3 operator* (const Vec3 &v3_1);
-        inline Vec3 operator/ (const Vec3 &v3_1);
-        inline Vec3 operator* (const float scalar);
-        inline Vec3 operator/ (const float scalar);
+        Vec3 operator+ (const Vec3 &v3_1);
+        Vec3 operator- (const Vec3 &v3_1);
+        Vec3 operator* (const Vec3 &v3_1);
+        Vec3 operator/ (const Vec3 &v3_1);
+        Vec3 operator* (const float scalar);
+        Vec3 operator/ (const float scalar);
 
-        inline float dot(const Vec3 &v3_1, const Vec3 &v3_2);
-        inline float dot(const Vec3 &v3_1);
-        inline Vec3 cross(const Vec3 &v3_1, const Vec3 &v3_2);
-        inline Vec3 cross(const Vec3 &v3_1);
+        float dot(const Vec3 &v3_1, const Vec3 &v3_2);
+        float dot(const Vec3 &v3_1);
+        Vec3 cross(const Vec3 &v3_1, const Vec3 &v3_2);
+        Vec3 cross(const Vec3 &v3_1);
 
         virtual ~Vec3();
 };
