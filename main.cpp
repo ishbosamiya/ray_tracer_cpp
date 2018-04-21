@@ -20,13 +20,11 @@ int main() {
     char *pixels = new char[width * height * 3];
     for(int y = height - 1; y >= 0; y--) {
         for(int x = 0; x < width; x++) {
-            float r = (float)x / (float)width;
-            float g = (float)(y) / (float)height;
-            float b = 0.2;
+            Vec3 color((float)x / (float)width, (float)y / (float)height, 0.2);
 
-            pixels[getIndex(x, y) + 0] = r * 255;
-            pixels[getIndex(x, y) + 1] = g * 255;
-            pixels[getIndex(x, y) + 2] = b * 255;
+            pixels[getIndex(x, y) + 0] = color[0] * 255;
+            pixels[getIndex(x, y) + 1] = color[1] * 255;
+            pixels[getIndex(x, y) + 2] = color[2] * 255;
         }
     }
     writeToPPM(pixels, "image.ppm");
