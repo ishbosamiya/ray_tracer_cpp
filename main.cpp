@@ -2,21 +2,13 @@
 #include <cstdlib>
 #include <fstream>
 
-#include "vec3.h"
-#include "ray.h"
+#include "functions.h"
 
 using namespace std;
 
 const float multiplier = 0.5;
 const int width = 1280 * multiplier;
 const int height = 720 * multiplier;
-
-void writeToPPM(char *components, char *path);
-Vec3 backgroundColor(Ray &ray);
-
-int getIndex(int x, int y) {
-    return (x + y * width) * 3;
-}
 
 int main() {
     char *pixels = new char[width * height * 3];
@@ -43,31 +35,4 @@ int main() {
     writeToPPM(pixels, "image.ppm");
 
     system("ppm_loader.exe image.ppm");
-}
-
-void writeToPPM(char *components, char *path) {
-    ofstream fout;
-    fout.open(path);
-    if(!fout.is_open()) {
-        cout << "Couldn't Write PPM To File" << endl;
-        return;
-    }
-    fout << "P3" << endl;
-    fout << width << " " << height << endl;
-    fout << "255" << endl;
-    for(int y = height - 1; y >= 0; y--) {
-        for(int x = 0; x < width; x++) {
-            unsigned char r = components[getIndex(x, y) + 0];
-            unsigned char g = components[getIndex(x, y) + 1];
-            unsigned char b = components[getIndex(x, y) + 2];
-            fout << (int)r << " " << (int)g << " " << (int)b << "\t";
-        }
-        fout << endl;
-    }
-}
-
-Vec3 backgroundColor(Ray &ray) {
-    Vec3 unit_direction = ray.directionVector().normalized();
-    float t = 0.5 * (unit_direction.y() + 1.0);
-    return Vec3(1.0, 1.0, 1.0)*(1.0 - t) + Vec3(0.5, 0.7, 1.0)*t;
 }
