@@ -68,7 +68,7 @@ float hitSphere(Vec3 center, float radius, Ray ray) {
         return -1.0;
     }
     else {
-        return ((-b - sqrt(discriminant)) / 2.0*a);
+        return ((-b - sqrt(discriminant)) / (2.0*a));
     }
 }
 
