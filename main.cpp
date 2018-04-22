@@ -3,6 +3,9 @@
 #include <fstream>
 
 #include "functions.h"
+#include "sphere.h"
+#include "hitable.h"
+#include "hitable_list.h"
 
 using namespace std;
 
@@ -23,6 +26,11 @@ int main() {
     Vec3 vertical(0.0, 2.0, 0.0);
     Vec3 origin(0.0, 0.0, 0.0);
 
+    Hitable *list[2];
+    list[0] = new Sphere(Vec3(0.0, 0.0, -1.0), 0.5);
+    list[1] = new Sphere(Vec3(0.0, -100.5, -1.0), 100);
+    Hitable *world = new Hitable_List(list, 2);
+
     for(int y = height - 1; y >= 0; y--) {
         for(int x = 0; x < width; x++) {
             float u = (float)x / (float)width;
@@ -30,7 +38,8 @@ int main() {
 
             Ray ray(origin, lower_left_corner + horizontal*u + vertical*v);
 
-            Vec3 color = backgroundColor(ray);
+            Vec3 p = ray.pointAtParameter(2.0);
+            Vec3 color = backgroundColor(ray, world);
 
             pixels[getIndex(x, y) + 0] = color[0] * 255;
             pixels[getIndex(x, y) + 1] = color[1] * 255;

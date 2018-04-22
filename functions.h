@@ -8,6 +8,8 @@
 
 #include "vec3.h"
 #include "ray.h"
+#include "hitable.h"
+#include "hitable_list.h"
 
 using namespace std;
 
@@ -17,7 +19,7 @@ extern const int height;
 
 int getIndex(int x, int y);
 void writeToPPM(char *components, char *path);
-Vec3 backgroundColor(Ray &ray);
+Vec3 backgroundColor(Ray &ray, Hitable *world);
 float hitSphere(Vec3 center, float radius, Ray ray);
 
 int getIndex(int x, int y) {
@@ -45,17 +47,16 @@ void writeToPPM(char *components, char *path) {
     }
 }
 
-Vec3 backgroundColor(Ray &ray) {
-    float t = hitSphere(Vec3(0.0, 0.0, -1.0), 0.5, ray);
-    if(t > 0.0){
-        Vec3 N = ray.pointAtParameter(t) - Vec3(0.0, 0.0, -1.0);
-        N = N.normalized();
-        return (N+Vec3(1.0, 1.0, 1.0))*0.5;
+Vec3 backgroundColor(Ray &ray, Hitable *world) {
+    Hit_Record record;
+    if(world->hit(ray, 0.0, 10000.0, record)) {
+        return (record.normal + Vec3(1.0, 1.0, 1.0))*0.5;
     }
-
-    Vec3 unit_direction = ray.directionVector().normalized();
-    t = 0.5 * (unit_direction.y() + 1.0);
-    return Vec3(1.0, 1.0, 1.0)*(1.0 - t) + Vec3(0.5, 0.7, 1.0)*t;
+    else {
+        Vec3 unit_direction = ray.directionVector().normalized();
+        float t = (unit_direction.y() + 1.0)*0.5;
+        return Vec3(1.0, 1.0, 1.0)*(1.0 - t) + Vec3(0.5, 0.7, 1.0)*t;
+    }
 }
 
 float hitSphere(Vec3 center, float radius, Ray ray) {
