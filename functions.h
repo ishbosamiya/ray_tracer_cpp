@@ -5,6 +5,9 @@
 #include <fstream>
 #include <cstdlib>
 #include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
 #include "vec3.h"
 #include "ray.h"
@@ -21,6 +24,7 @@ int getIndex(int x, int y);
 void writeToPPM(char *components, char *path);
 Vec3 backgroundColor(Ray &ray, Hitable *world);
 float hitSphere(Vec3 center, float radius, Ray ray);
+float randomBetweenZeroOne();
 
 int getIndex(int x, int y) {
     return (x + y * width) * 3;
@@ -71,6 +75,10 @@ float hitSphere(Vec3 center, float radius, Ray ray) {
     else {
         return ((-b - sqrt(discriminant)) / (2.0*a));
     }
+}
+
+float randomBetweenZeroOne() {
+    return ((double)rand()/RAND_MAX);
 }
 
 #endif // FUNCTIONS_H
