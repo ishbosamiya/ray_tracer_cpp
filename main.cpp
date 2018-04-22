@@ -6,14 +6,19 @@
 
 using namespace std;
 
-const float multiplier = 0.5;
-const int width = 1280 * multiplier;
-const int height = 720 * multiplier;
+//const float multiplier = 0.5;
+//const int width = 1280 * multiplier;
+//const int height = 720 * multiplier;
+
+const float multiplier = 4;
+const int width = 200 * multiplier;
+const int height = 100 * multiplier;
+
 
 int main() {
     char *pixels = new char[width * height * 3];
 
-    Vec3 lower_left_corner(-2.0, -1.0, -1.0);
+    Vec3 lower_left_corner(-2, -1, -1.0);
     Vec3 horizontal(4.0, 0.0, 0.0);
     Vec3 vertical(0.0, 2.0, 0.0);
     Vec3 origin(0.0, 0.0, 0.0);
