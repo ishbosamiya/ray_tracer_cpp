@@ -17,7 +17,7 @@ using namespace std;
 const float multiplier = 0.5;
 const int width = 1280 * multiplier;
 const int height = 720 * multiplier;
-const int no_of_samples = 5;
+const int no_of_samples = 100;
 
 
 int main() {
@@ -47,6 +47,8 @@ int main() {
             }
 
             color /= (float)no_of_samples;
+
+            color = Vec3(sqrt(color[0]), sqrt(color[1]), sqrt(color[2])); //gamma correction
 
             pixels[getIndex(x, y) + 0] = color[0] * 255;
             pixels[getIndex(x, y) + 1] = color[1] * 255;

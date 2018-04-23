@@ -25,6 +25,7 @@ void writeToPPM(char *components, char *path);
 Vec3 backgroundColor(Ray &ray, Hitable *world);
 float hitSphere(Vec3 center, float radius, Ray ray);
 float randomBetweenZeroOne();
+Vec3 randomInUnitSphere();
 
 int getIndex(int x, int y) {
     return (x + y * width) * 3;
@@ -53,8 +54,10 @@ void writeToPPM(char *components, char *path) {
 
 Vec3 backgroundColor(Ray &ray, Hitable *world) {
     Hit_Record record;
-    if(world->hit(ray, 0.0, 10000.0, record)) {
-        return (record.normal + Vec3(1.0, 1.0, 1.0))*0.5;
+    if(world->hit(ray, 0.001, 10000.0, record)) {
+        Vec3 target = record.point + record.normal + randomInUnitSphere();
+        Ray temp_ray(record.point, target - record.point);
+        return backgroundColor(temp_ray, world)*0.5;
     }
     else {
         Vec3 unit_direction = ray.directionVector().normalized();
@@ -79,6 +82,16 @@ float hitSphere(Vec3 center, float radius, Ray ray) {
 
 float randomBetweenZeroOne() {
     return ((double)rand()/RAND_MAX);
+}
+
+Vec3 randomInUnitSphere() {
+    Vec3 p;
+
+    do {
+        p = Vec3(randomBetweenZeroOne(), randomBetweenZeroOne(), randomBetweenZeroOne())*2.0 - Vec3(1.0, 1.0, 1.0);
+    } while(p.squaredLength() >= 1.0);
+
+    return p;
 }
 
 #endif // FUNCTIONS_H
