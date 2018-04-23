@@ -63,9 +63,10 @@ class Metal: public Material {
 
 class Dielectric: public Material {
     float refractive_index;
+    float fuzz;
 
     public:
-        Dielectric(float refractive_index) { this->refractive_index = refractive_index;}
+        Dielectric(float refractive_index, float fuzz = 0.0) { this->refractive_index = refractive_index; this->fuzz = fuzz;}
 
         virtual bool scatter(Ray &ray_in, Hit_Record &record, Vec3 &attenuation, Ray &scattered) const {
             Vec3 outward_normal;
@@ -84,7 +85,7 @@ class Dielectric: public Material {
             }
 
             if(refract(ray_in.directionVector(), outward_normal, relative_ri, refracted)) {
-                scattered = Ray(record.point, refracted);
+                scattered = Ray(record.point, refracted + (randomInUnitSphere()*fuzz));
             }
             else {
                 scattered = Ray(record.point, refracted);
