@@ -1,12 +1,13 @@
 #include "sphere.h"
 
 Sphere::Sphere() {
-
+    material = nullptr;
 }
 
-Sphere::Sphere(Vec3 center, float radius) {
+Sphere::Sphere(Vec3 center, float radius, Material *material) {
     this->center = center;
     this->radius = radius;
+    this->material = material;
 }
 
 bool Sphere::hit(Ray &ray, float t_min, float t_max, Hit_Record &record) const {
@@ -22,6 +23,7 @@ bool Sphere::hit(Ray &ray, float t_min, float t_max, Hit_Record &record) const {
             record.t = temp;
             record.point = ray.pointAtParameter(record.t);
             record.normal = (record.point - center) / radius;
+            record.material_pointer = material;
             return true;
         }
         temp = (-b + discriminant_sqrt)/(2.0*a);
@@ -29,13 +31,13 @@ bool Sphere::hit(Ray &ray, float t_min, float t_max, Hit_Record &record) const {
             record.t = temp;
             record.point = ray.pointAtParameter(record.t);
             record.normal = (record.point - center) / radius;
+            record.material_pointer = material;
             return true;
         }
     }
     return false;
 }
 
-Sphere::~Sphere()
-{
-    //dtor
+Sphere::~Sphere() {
+    delete material;
 }

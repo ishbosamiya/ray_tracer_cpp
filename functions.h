@@ -9,10 +9,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-#include "vec3.h"
-#include "ray.h"
-#include "hitable.h"
-#include "hitable_list.h"
+extern const int total_samples;
 
 using namespace std;
 
@@ -22,10 +19,11 @@ extern const int height;
 
 int getIndex(int x, int y);
 void writeToPPM(char *components, char *path);
-Vec3 backgroundColor(Ray &ray, Hitable *world);
+Vec3 backgroundColor(Ray &ray, Hitable *world, int depth);
 float hitSphere(Vec3 center, float radius, Ray ray);
 float randomBetweenZeroOne();
 Vec3 randomInUnitSphere();
+void percentageCompleted();
 
 int getIndex(int x, int y) {
     return (x + y * width) * 3;
@@ -52,12 +50,17 @@ void writeToPPM(char *components, char *path) {
     }
 }
 
-Vec3 backgroundColor(Ray &ray, Hitable *world) {
+Vec3 backgroundColor(Ray &ray, Hitable *world, int depth) {
     Hit_Record record;
     if(world->hit(ray, 0.001, 10000.0, record)) {
-        Vec3 target = record.point + record.normal + randomInUnitSphere();
-        Ray temp_ray(record.point, target - record.point);
-        return backgroundColor(temp_ray, world)*0.5;
+        Ray scattered;
+        Vec3 attenuation;
+        if(depth < 50 && record.material_pointer->scatter(ray, record, attenuation, scattered)) {
+            return attenuation*backgroundColor(scattered, world, depth+1);
+        }
+        else {
+            return Vec3(0.0, 0.0, 0.0);
+        }
     }
     else {
         Vec3 unit_direction = ray.directionVector().normalized();
@@ -92,6 +95,18 @@ Vec3 randomInUnitSphere() {
     } while(p.squaredLength() >= 1.0);
 
     return p;
+}
+
+void percentageCompleted() {
+    static float one_over_total_samples = 1.0/total_samples;
+    static int previous_percentage = 0;
+    static int current_count = 1;
+    int current_percentage = current_count * one_over_total_samples * 100;
+    if(current_percentage > previous_percentage) {
+        previous_percentage = current_percentage;
+        cout << "\rRay Tracing Progress: " << current_percentage << "%";
+    }
+    current_count++;
 }
 
 #endif // FUNCTIONS_H

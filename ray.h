@@ -3,8 +3,7 @@
 
 #include "vec3.h"
 
-class Ray
-{
+class Ray {
     Vec3 origin;
     Vec3 direction;
 
