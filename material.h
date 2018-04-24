@@ -118,4 +118,31 @@ class Dielectric: public Material {
         }
 };
 
+class Fresnel_Material: public Material {
+    float refractive_index;
+
+    public:
+        Fresnel_Material(float refractive_index) { this->refractive_index = refractive_index;}
+
+        virtual bool scatter(Ray &ray_in, Hit_Record &record, Vec3 &attenuation, Ray &scattered) const {
+            float cosine;
+            float reflection_probability;
+            float relative_ri;
+            if(ray_in.directionVector().dot(record.normal) > 0) {
+                relative_ri = refractive_index;
+                cosine = refractive_index * ray_in.directionVector().dot(record.normal) / ray_in.directionVector().length();
+            }
+            else {
+                relative_ri = 1.0/refractive_index;
+                cosine = -ray_in.directionVector().dot(record.normal) / ray_in.directionVector().length();
+            }
+            reflection_probability = schlick(cosine, relative_ri);
+
+            Vec3 target = record.point + record.normal + randomInUnitSphere();
+            scattered = Ray(record.point, target-record.point);
+            attenuation = Vec3(reflection_probability, reflection_probability, reflection_probability);
+            return true;
+        }
+};
+
 #endif // MATERIAL_H
