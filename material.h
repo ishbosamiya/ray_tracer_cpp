@@ -1,10 +1,13 @@
 #ifndef MATERIAL_H
 #define MATERIAL_H
 
+#include <math.h>
+
 #include "vec3.h"
 #include "ray.h"
 #include "hitable.h"
 
+extern float randomBetweenZeroOne();
 extern Vec3 randomInUnitSphere();
 
 class Material {
@@ -27,6 +30,12 @@ class Material {
             else {
                 return false;
             }
+        }
+
+        float schlick(float cosine, float refractive_index) const {
+            float r0 = (1.0 - refractive_index) / (1.0 + refractive_index);
+            r0 = r0*r0;
+            return r0 + (1.0-r0)*pow((1.0 - cosine), 5);
         }
 };
 
@@ -66,7 +75,10 @@ class Dielectric: public Material {
     float fuzz;
 
     public:
-        Dielectric(float refractive_index, float fuzz = 0.0) { this->refractive_index = refractive_index; this->fuzz = fuzz;}
+        Dielectric(float refractive_index, float fuzz = 0.0) {
+            this->refractive_index = refractive_index;
+            this->fuzz = fuzz < 0.999 ? fuzz : 0.999;
+        }
 
         virtual bool scatter(Ray &ray_in, Hit_Record &record, Vec3 &attenuation, Ray &scattered) const {
             Vec3 outward_normal;
@@ -74,23 +86,34 @@ class Dielectric: public Material {
             float relative_ri;
             attenuation = Vec3(1.0, 1.0, 1.0);
             Vec3 refracted;
+            float reflection_probability;
+            float cosine;
 
             if(ray_in.directionVector().dot(record.normal) > 0) {
                 outward_normal = Vec3(0.0, 0.0, 0.0) - record.normal;
                 relative_ri = refractive_index;
+                cosine = refractive_index * ray_in.directionVector().dot(record.normal) / ray_in.directionVector().length();
             }
             else {
                 outward_normal = record.normal;
                 relative_ri = 1.0/refractive_index;
+                cosine = -ray_in.directionVector().dot(record.normal) / ray_in.directionVector().length();
             }
 
             if(refract(ray_in.directionVector(), outward_normal, relative_ri, refracted)) {
-                scattered = Ray(record.point, refracted + (randomInUnitSphere()*fuzz));
+                reflection_probability = schlick(cosine, refractive_index);
             }
             else {
-                scattered = Ray(record.point, refracted);
-                return false;
+                reflection_probability = 1.0;
             }
+
+            if(randomBetweenZeroOne() < reflection_probability) {
+                scattered = Ray(record.point, reflected + (randomInUnitSphere()*fuzz));
+            }
+            else {
+                scattered = Ray(record.point, refracted + (randomInUnitSphere()*fuzz));
+            }
+
             return true;
         }
 };

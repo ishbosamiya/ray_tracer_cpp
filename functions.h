@@ -55,7 +55,7 @@ Vec3 backgroundColor(Ray &ray, Hitable *world, int depth) {
     if(world->hit(ray, 0.001, 10000.0, record)) {
         Ray scattered;
         Vec3 attenuation;
-        if(depth < 50 && record.material_pointer->scatter(ray, record, attenuation, scattered)) {
+        if(depth < 5 && record.material_pointer->scatter(ray, record, attenuation, scattered)) {
             return attenuation*backgroundColor(scattered, world, depth+1);
         }
         else {
