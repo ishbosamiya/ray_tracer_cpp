@@ -32,7 +32,7 @@ int main() {
     list[4] = new Sphere(Vec3(-1.0, 0.0, -1.0), 0.25, new Fresnel_Material(1.0));
     Hitable *world = new Hitable_List(list, 5);
 
-    Camera camera(70.0, (float)width/(float)height);
+    Camera camera(Vec3(0.0, 0.0, 0.0), Vec3(0.0, 0.0, -1.0), Vec3(0.0, 1.0, 0.0), 70.0, (float)width/(float)height);
 
     for(int y = height - 1; y >= 0; y--) {
         for(int x = 0; x < width; x++) {
