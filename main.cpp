@@ -15,7 +15,7 @@ using namespace std;
 const float multiplier = 0.2;
 const int width = 1280 * multiplier;
 const int height = 720 * multiplier;
-const int no_of_samples = 1;
+const int no_of_samples = 2;
 const int total_samples = no_of_samples * width * height;
 
 
@@ -32,7 +32,7 @@ int main() {
     list[4] = new Sphere(Vec3(-1.0, 0.0, -1.0), 0.25, new Fresnel_Material(1.0));
     Hitable *world = new Hitable_List(list, 5);
 
-    Camera camera(Vec3(0.0, 0.0, 0.0), Vec3(0.0, 0.0, -1.0), Vec3(0.0, 1.0, 0.0), 70.0, (float)width/(float)height);
+    Camera camera(Vec3(3.0, 3.0, 2.0), Vec3(0.0, 0.0, -1.0), Vec3(0.0, 1.0, 0.0), 20.0, (float)width/(float)height, 2.0, 5.1961524);
 
     for(int y = height - 1; y >= 0; y--) {
         for(int x = 0; x < width; x++) {

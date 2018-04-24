@@ -23,6 +23,7 @@ Vec3 backgroundColor(Ray &ray, Hitable *world, int depth);
 float hitSphere(Vec3 center, float radius, Ray ray);
 float randomBetweenZeroOne();
 Vec3 randomInUnitSphere();
+Vec3 randomInUnitDisk();
 void percentageCompleted();
 
 int getIndex(int x, int y) {
@@ -94,6 +95,14 @@ Vec3 randomInUnitSphere() {
         p = Vec3(randomBetweenZeroOne(), randomBetweenZeroOne(), randomBetweenZeroOne())*2.0 - Vec3(1.0, 1.0, 1.0);
     } while(p.squaredLength() >= 1.0);
 
+    return p;
+}
+
+Vec3 randomInUnitDisk() {
+    Vec3 p;
+    do {
+        p = (Vec3(randomBetweenZeroOne(), randomBetweenZeroOne(), 0.0)*2.0) - Vec3(1.0, 1.0, 0.0);
+    } while(p.dot(p) >= 1.0);
     return p;
 }
 
