@@ -11,7 +11,7 @@ class Camera
     Vec3 vertical;
     Vec3 origin;
     public:
-        Camera();
+        Camera(float vertical_fov, float aspect_ratio);
 
         Ray getRay(float u, float v);
 

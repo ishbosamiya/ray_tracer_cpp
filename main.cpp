@@ -15,7 +15,7 @@ using namespace std;
 const float multiplier = 0.2;
 const int width = 1280 * multiplier;
 const int height = 720 * multiplier;
-const int no_of_samples = 10;
+const int no_of_samples = 1;
 const int total_samples = no_of_samples * width * height;
 
 
@@ -25,14 +25,14 @@ int main() {
     char *pixels = new char[width * height * 3];
 
     Hitable *list[5];
-    list[0] = new Sphere(Vec3(0.0, 0.0, -1.0), 0.25, new Lambertian(Vec3(0.8, 0.8, 0.8)));
-    list[1] = new Sphere(Vec3(0.0, -100.5, -1.0), 100, new Lambertian(Vec3(0.8, 0.8, 0.8)));
-    list[2] = new Sphere(Vec3(0.5, 0.0, -1.0), 0.25, new Metal(Vec3(0.5, 0.5, 0.8), 0.3));
+    list[0] = new Sphere(Vec3(0.0, 0.0, -1.0), 0.25, new Lambertian(Vec3(0.8, 0.1, 0.1)));
+    list[1] = new Sphere(Vec3(0.0, -100.5, -1.0), 100, new Lambertian(Vec3(0.8, 0.8, 0.3)));
+    list[2] = new Sphere(Vec3(0.5, 0.0, -1.0), 0.25, new Metal(Vec3(0.5, 0.5, 0.8), 0.2));
     list[3] = new Sphere(Vec3(-0.5, 0.0, -1.0), 0.25, new Dielectric(1.5, 0.04));
     list[4] = new Sphere(Vec3(-1.0, 0.0, -1.0), 0.25, new Fresnel_Material(1.0));
     Hitable *world = new Hitable_List(list, 5);
 
-    Camera camera;
+    Camera camera(70.0, (float)width/(float)height);
 
     for(int y = height - 1; y >= 0; y--) {
         for(int x = 0; x < width; x++) {
