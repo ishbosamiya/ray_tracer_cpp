@@ -12,27 +12,34 @@
 
 using namespace std;
 
-const float multiplier = 0.2;
-const int width = 1280 * multiplier;
-const int height = 720 * multiplier;
-const int no_of_samples = 2;
-const int total_samples = no_of_samples * width * height;
-
 
 int main() {
+    const float multiplier = 1.0;
+    const int width = 1280 * multiplier;
+    const int height = 720 * multiplier;
+    const int no_of_samples = 100;
+    const int total_samples = no_of_samples * width * height;
+
     srand(time(0));
 
     char *pixels = new char[width * height * 3];
 
-    Hitable *list[5];
-    list[0] = new Sphere(Vec3(0.0, 0.0, -1.0), 0.25, new Lambertian(Vec3(0.8, 0.1, 0.1)));
-    list[1] = new Sphere(Vec3(0.0, -100.5, -1.0), 100, new Lambertian(Vec3(0.8, 0.8, 0.3)));
-    list[2] = new Sphere(Vec3(0.5, 0.0, -1.0), 0.25, new Metal(Vec3(0.5, 0.5, 0.8), 0.2));
-    list[3] = new Sphere(Vec3(-0.5, 0.0, -1.0), 0.25, new Dielectric(1.5, 0.04));
-    list[4] = new Sphere(Vec3(-1.0, 0.0, -1.0), 0.25, new Fresnel_Material(1.0));
-    Hitable *world = new Hitable_List(list, 5);
+    Hitable *world = randomScene();
 
-    Camera camera(Vec3(3.0, 3.0, 2.0), Vec3(0.0, 0.0, -1.0), Vec3(0.0, 1.0, 0.0), 20.0, (float)width/(float)height, 2.0, 5.1961524);
+    //Camera Properties
+//    Vec3 look_from(-0.45, 0.5, 0.066);
+//    Vec3 look_at(0.0, 0.0, -1.0);
+//    float aperture = 0.35;
+//    float fov = 70;
+//    Vec3 look_from(11.0, 3.5, 7.0);
+//    Vec3 look_at(0.0, 0.0, -1.0);
+//    float aperture = 3.0;
+//    float fov = 30.0;
+    Vec3 look_from(9.5, 2.0, 3.5);
+    Vec3 look_at(0.0, 0.7, -1.0);
+    float aperture = 0.1;
+    float fov = 30.0;
+    Camera camera(look_from, look_at, Vec3(0.0, 1.0, 0.0), fov, (float)width/(float)height, aperture, (look_from - look_at).length());
 
     for(int y = height - 1; y >= 0; y--) {
         for(int x = 0; x < width; x++) {
