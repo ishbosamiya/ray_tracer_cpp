@@ -10,13 +10,13 @@
 #include <time.h>
 #include <sys/timeb.h>
 
-extern const int total_samples;
-
 using namespace std;
 
-extern const float multiplier;
-extern const int width;
-extern const int height;
+extern float multiplier;
+extern int width;
+extern int height;
+extern int no_of_samples;
+extern int total_samples;
 
 int getIndex(int x, int y);
 void writeToPPM(char *components, char *path);
@@ -163,7 +163,7 @@ Hitable *randomScene() {
         }
     }
     list[i++] = new Sphere(Vec3(0.0, 1.0, 0.0), 1.0, new Dielectric(1.5, 0.003));
-    list[i++] = new Sphere(Vec3(-4.0, 1.0, 0.0), 1.0, new Lambertian(Vec3(0.4, 0.2, 0.1)));
+    list[i++] = new Sphere(Vec3(-4.0, 1.0, 0.0), 1.0, new Lambertian(Vec3(0.32, 0.95, 0.82)));
     list[i++] = new Sphere(Vec3(4.0, 1.0, 0.0), 1.0, new Metal(Vec3(0.7, 0.6, 0.5), 0.04));
 
     return new Hitable_List(list, i);

@@ -12,13 +12,35 @@
 
 using namespace std;
 
+float multiplier = 1.0;
+int width = 1280 * multiplier;
+int height = 720 * multiplier;
+int no_of_samples = 1;
+int total_samples = no_of_samples * width * height;
+
+void getSettings() {
+    ifstream fin;
+    fin.open("settings.txt");
+    if(!fin.is_open()) {
+        cout << "Setting file not found, creating new one" << endl;
+        cout << "Order: multiplier, width, height, no of samples" << endl;
+        ofstream fout;
+        fout.open("settings.txt");
+        fout << multiplier << endl;
+        fout << width << endl;
+        fout << height << endl;
+        fout << no_of_samples << endl;
+        fout.close();
+        return;
+    }
+    fin >> multiplier >> width >> height >> no_of_samples;
+    width *= multiplier;
+    height *= multiplier;
+}
 
 int main() {
-    const float multiplier = 1.0;
-    const int width = 1280 * multiplier;
-    const int height = 720 * multiplier;
-    const int no_of_samples = 100;
-    const int total_samples = no_of_samples * width * height;
+    getSettings();
+    total_samples = no_of_samples * width * height;
 
     srand(time(0));
 
@@ -27,17 +49,9 @@ int main() {
     Hitable *world = randomScene();
 
     //Camera Properties
-//    Vec3 look_from(-0.45, 0.5, 0.066);
-//    Vec3 look_at(0.0, 0.0, -1.0);
-//    float aperture = 0.35;
-//    float fov = 70;
-//    Vec3 look_from(11.0, 3.5, 7.0);
-//    Vec3 look_at(0.0, 0.0, -1.0);
-//    float aperture = 3.0;
-//    float fov = 30.0;
     Vec3 look_from(9.5, 2.0, 3.5);
     Vec3 look_at(0.0, 0.7, -1.0);
-    float aperture = 0.1;
+    float aperture = 0.05;
     float fov = 30.0;
     Camera camera(look_from, look_at, Vec3(0.0, 1.0, 0.0), fov, (float)width/(float)height, aperture, (look_from - look_at).length());
 
