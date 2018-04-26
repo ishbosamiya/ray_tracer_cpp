@@ -9,6 +9,7 @@
 #include "hitable_list.h"
 #include "camera.h"
 #include "functions.h"
+#include "bvh_node.h"
 
 using namespace std;
 
@@ -36,6 +37,10 @@ void getSettings() {
     fin >> multiplier >> width >> height >> no_of_samples;
     width *= multiplier;
     height *= multiplier;
+    cout << "***Settings***" << endl;
+    cout << "Width: " << width << endl;
+    cout << "Height: " << height << endl;
+    cout << "Number of samples: " << no_of_samples << endl;
 }
 
 int main() {
@@ -46,7 +51,9 @@ int main() {
 
     char *pixels = new char[width * height * 3];
 
-    Hitable *world = randomScene();
+    int list_size;
+    Hitable **list = randomScene(list_size);
+    BVH_Node *world = new BVH_Node(list, list_size, 0.0, 0.0);
 
     //Camera Properties
     Vec3 look_from(9.5, 2.0, 3.5);

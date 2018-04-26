@@ -24,6 +24,29 @@ bool Hitable_List::hit(Ray &ray, float t_min, float t_max, Hit_Record &record) c
     return hit_anything;
 }
 
+bool Hitable_List::boundingBox(float time0, float time1, AABB &box) const {
+    if(list_size < 1) {
+        return false;
+    }
+    AABB temp_box;
+    bool first_true = list[0]->boundingBox(time0, time1, temp_box);
+    if(!first_true) {
+        return false;
+    }
+    else {
+        box = temp_box;
+    }
+    for(int i = 1; i < list_size; i++) {
+        if(list[i]->boundingBox(time0, time1, temp_box)) {
+            box = surroundingBox(box, temp_box);
+        }
+        else {
+            return false;
+        }
+    }
+    return true;
+}
+
 Hitable_List::~Hitable_List()
 {
     //dtor

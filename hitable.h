@@ -3,6 +3,7 @@
 
 #include "vec3.h"
 #include "ray.h"
+#include "aabb.h"
 
 class Material;
 
@@ -16,6 +17,7 @@ struct Hit_Record {
 class Hitable {
     public:
         virtual bool hit(Ray &ray, float t_min, float t_max, Hit_Record &record) const = 0;
+        virtual bool boundingBox(float time0, float time1, AABB &box) const = 0;
 };
 
 #endif // HITABLE_H

@@ -21,12 +21,11 @@ extern int total_samples;
 int getIndex(int x, int y);
 void writeToPPM(char *components, char *path);
 Vec3 backgroundColor(Ray &ray, Hitable *world, int depth);
-float hitSphere(Vec3 center, float radius, Ray ray);
 float randomBetweenZeroOne();
 Vec3 randomInUnitSphere();
 Vec3 randomInUnitDisk();
 void percentageCompleted();
-Hitable *randomScene();
+Hitable **randomScene(int &size);
 int getMilliCount();
 void printTime(long long int time);
 
@@ -71,20 +70,6 @@ Vec3 backgroundColor(Ray &ray, Hitable *world, int depth) {
         Vec3 unit_direction = ray.directionVector().normalized();
         float t = (unit_direction.y() + 1.0)*0.5;
         return Vec3(1.0, 1.0, 1.0)*(1.0 - t) + Vec3(0.5, 0.7, 1.0)*t;
-    }
-}
-
-float hitSphere(Vec3 center, float radius, Ray ray) {
-    Vec3 oc = ray.originVector() - center;
-    float a = ray.directionVector().dot(ray.directionVector());
-    float b = 2.0 * oc.dot(ray.directionVector());
-    float c = oc.dot(oc) - radius*radius;
-    float discriminant = b*b - 4*a*c;
-    if(discriminant < 0) {
-        return -1.0;
-    }
-    else {
-        return ((-b - sqrt(discriminant)) / (2.0*a));
     }
 }
 
@@ -135,9 +120,10 @@ void percentageCompleted() {
     current_count++;
 }
 
-Hitable *randomScene() {
-    int n = 500;
-    Hitable **list = new Hitable*[n+1];
+Hitable **randomScene(int &size) {
+    Hitable **list;
+    size = 500;
+    list = new Hitable*[size+1];
     list[0] = new Sphere(Vec3(0.0, -1000.0, 0), 1000.0, new Lambertian(Vec3(0.5, 0.5, 0.5)));
     int i = 1;
     for(int a = -11; a < 11; a++) {
@@ -166,7 +152,8 @@ Hitable *randomScene() {
     list[i++] = new Sphere(Vec3(-4.0, 1.0, 0.0), 1.0, new Lambertian(Vec3(0.32, 0.95, 0.82)));
     list[i++] = new Sphere(Vec3(4.0, 1.0, 0.0), 1.0, new Metal(Vec3(0.7, 0.6, 0.5), 0.04));
 
-    return new Hitable_List(list, i);
+    size = i;
+    return list;
 }
 
 int getMilliCount(){
