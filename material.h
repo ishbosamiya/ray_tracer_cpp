@@ -6,6 +6,7 @@
 #include "vec3.h"
 #include "ray.h"
 #include "hitable.h"
+#include "texture.h"
 
 extern float randomBetweenZeroOne();
 extern Vec3 randomInUnitSphere();
@@ -42,15 +43,15 @@ class Material {
 //The Materials
 
 class Lambertian: public Material {
-    Vec3 albedo;
+    Texture *albedo;
 
     public:
-        Lambertian(Vec3 albedo) { this->albedo = albedo;}
+        Lambertian(Texture *albedo) { this->albedo = albedo;}
 
         virtual bool scatter(Ray &ray_in, Hit_Record &record, Vec3 &attenuation, Ray &scattered) const {
             Vec3 target = record.point + record.normal + randomInUnitSphere();
             scattered = Ray(record.point, target-record.point);
-            attenuation = albedo;
+            attenuation = albedo->value(Vec3(0,0,0), record.point);
             return true;
         }
 };

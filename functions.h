@@ -124,7 +124,8 @@ Hitable **randomScene(int &size) {
     Hitable **list;
     size = 500;
     list = new Hitable*[size+1];
-    list[0] = new Sphere(Vec3(0.0, -1000.0, 0), 1000.0, new Lambertian(Vec3(0.5, 0.5, 0.5)));
+    list[0] = new Sphere(Vec3(0.0, -1000.0, 0), 1000.0, new Lambertian(new Checker_Texture( new Constant_Texture(Vec3(0.2, 0.5, 0.1)),
+                                                                                           new Constant_Texture(Vec3(0.9, 0.9, 0.9)))));
     int i = 1;
     for(int a = -11; a < 11; a++) {
         for(int b = -11; b < 11; b++) {
@@ -132,9 +133,9 @@ Hitable **randomScene(int &size) {
             Vec3 center(a+0.9*randomBetweenZeroOne(), 0.2, b+0.9*randomBetweenZeroOne());
             if((center - Vec3(4.0, 0.2, 0.0)).length() > 0.9) {
                 if(choose_mat < 0.7) {
-                    list[i++] = new Sphere(center, 0.2, new Lambertian(Vec3(randomBetweenZeroOne()*randomBetweenZeroOne(),
+                    list[i++] = new Sphere(center, 0.2, new Lambertian(new Constant_Texture(Vec3(randomBetweenZeroOne()*randomBetweenZeroOne(),
                                                                             randomBetweenZeroOne()*randomBetweenZeroOne(),
-                                                                            randomBetweenZeroOne()*randomBetweenZeroOne())));
+                                                                            randomBetweenZeroOne()*randomBetweenZeroOne()))));
                 }
                 else if(choose_mat < 0.9) {
                     list[i++] = new Sphere(center, 0.2, new Metal(Vec3(randomBetweenZeroOne()*randomBetweenZeroOne(),
@@ -149,7 +150,7 @@ Hitable **randomScene(int &size) {
         }
     }
     list[i++] = new Sphere(Vec3(0.0, 1.0, 0.0), 1.0, new Dielectric(1.5, 0.003));
-    list[i++] = new Sphere(Vec3(-4.0, 1.0, 0.0), 1.0, new Lambertian(Vec3(0.32, 0.95, 0.82)));
+    list[i++] = new Sphere(Vec3(-4.0, 1.0, 0.0), 1.0, new Lambertian(new Constant_Texture(Vec3(0.32, 0.95, 0.82))));
     list[i++] = new Sphere(Vec3(4.0, 1.0, 0.0), 1.0, new Metal(Vec3(0.7, 0.6, 0.5), 0.04));
 
     size = i;

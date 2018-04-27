@@ -58,7 +58,7 @@ int main() {
     //Camera Properties
     Vec3 look_from(9.5, 2.0, 3.5);
     Vec3 look_at(0.0, 0.7, -1.0);
-    float aperture = 0.05;
+    float aperture = 30.0;
     float fov = 30.0;
     Camera camera(look_from, look_at, Vec3(0.0, 1.0, 0.0), fov, (float)width/(float)height, aperture, (look_from - look_at).length());
 
