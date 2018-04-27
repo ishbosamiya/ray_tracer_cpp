@@ -94,6 +94,13 @@ int main() {
             }
         }
         writeToPPM(pixels, "image.ppm");
+        if(s == 0) {
+            system("start ppm_loader.exe image.ppm");
+        }
+        else {
+            system("Taskkill /IM ppm_loader.exe");
+            system("start ppm_loader.exe image.ppm");
+        }
     }
 
     writeToPPM(pixels, "image.ppm");
