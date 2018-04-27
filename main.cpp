@@ -50,6 +50,7 @@ int main() {
     srand(time(0));
 
     char *pixels = new char[width * height * 3];
+    Vec3 *pixels_temp = new Vec3[width * height];
 
     int list_size = 2;
     Hitable **list = new Hitable*[list_size];
@@ -61,14 +62,16 @@ int main() {
     //Camera Properties
     Vec3 look_from(0.0, 1.3, 0.0);
     Vec3 look_at(0.0, 0.0, -1.0);
-    float aperture = 22.0;
+    float aperture = 0.0; //this setting is the opposite to a real camera, larger value causes more depth of field
     float fov = 70.0;
     Camera camera(look_from, look_at, Vec3(0.0, 1.0, 0.0), fov, (float)width/(float)height, aperture, (look_from - look_at).length());
 
-    for(int y = height - 1; y >= 0; y--) {
-        for(int x = 0; x < width; x++) {
-            Vec3 color(0.0, 0.0, 0.0);
-            for(int s = 0; s < no_of_samples; s++) {
+    for(int s = 0; s < no_of_samples; s++) {
+        for(int y = height - 1; y >= 0; y--) {
+            for(int x = 0; x < width; x++) {
+                Vec3 color(0, 0, 0);
+                color = pixels_temp[x + y * width];
+
                 float u = ((float)x + randomBetweenZeroOne())/ (float)width;
                 float v = ((float)y + randomBetweenZeroOne())/ (float)height;
 
@@ -79,17 +82,20 @@ int main() {
                 color += backgroundColor(ray, world, 0);
 
                 percentageCompleted(); //gives report of how much of the ray tracing is done
+
+                Vec3 temp_color = color/(float)(s+1.0);
+
+                temp_color = Vec3(sqrt(temp_color[0]), sqrt(temp_color[1]), sqrt(temp_color[2])); //gamma correction
+
+                pixels_temp[x + y * width] = color;
+                pixels[getIndex(x, y) + 0] = temp_color[0] * 255;
+                pixels[getIndex(x, y) + 1] = temp_color[1] * 255;
+                pixels[getIndex(x, y) + 2] = temp_color[2] * 255;
             }
-
-            color /= (float)no_of_samples;
-
-            color = Vec3(sqrt(color[0]), sqrt(color[1]), sqrt(color[2])); //gamma correction
-
-            pixels[getIndex(x, y) + 0] = color[0] * 255;
-            pixels[getIndex(x, y) + 1] = color[1] * 255;
-            pixels[getIndex(x, y) + 2] = color[2] * 255;
         }
+        writeToPPM(pixels, "image.ppm");
     }
+
     writeToPPM(pixels, "image.ppm");
 
     system("ppm_loader.exe image.ppm");

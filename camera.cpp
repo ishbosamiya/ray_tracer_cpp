@@ -19,7 +19,7 @@ Camera::Camera(Vec3 look_from, Vec3 look_at, Vec3 vertical_up, float vertical_fo
 }
 
 Ray Camera::getRay(float u, float v) {
-    Vec3 rd = randomInUnitDisk() / lens_radius;
+    Vec3 rd = randomInUnitDisk() * lens_radius;
     Vec3 offset = (this->u * rd.x()) + (this->v * rd.y());
 
     return Ray(origin + offset, lower_left_corner + horizontal*u + vertical*v - origin - offset);
