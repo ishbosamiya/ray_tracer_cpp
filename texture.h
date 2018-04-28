@@ -10,7 +10,7 @@
 class Texture
 {
     public:
-        virtual Vec3 value(Vec3 uv, Vec3 &point) const = 0;
+        virtual Vec3 value(Vec3 uv, Hit_Record &record) const = 0;
 };
 
 class Constant_Texture: public Texture {
@@ -20,7 +20,7 @@ class Constant_Texture: public Texture {
         Constant_Texture() {}
         Constant_Texture(Vec3 color) { this->color = color;}
 
-        virtual Vec3 value(Vec3 uv, Vec3 &point) const {
+        virtual Vec3 value(Vec3 uv, Hit_Record &record) const {
             return color;
         }
 };
@@ -36,14 +36,28 @@ class Checker_Texture: public Texture {
             this->texture1 = texture1;
         }
 
-        virtual Vec3 value(Vec3 uv, Vec3 &point) const {
-            float sines = sin(10.0*point.x())*sin(10.0*point.y())*sin(10.0*point.z());
+        virtual Vec3 value(Vec3 uv, Hit_Record &record) const {
+            float sines = sin(10.0*record.point.x())*sin(10.0*record.point.y())*sin(10.0*record.point.z());
             if(sines < 0) {
-                return texture1->value(uv, point);
+                return texture1->value(uv, record);
             }
             else {
-                return texture0->value(uv, point);
+                return texture0->value(uv, record);
             }
+        }
+};
+
+class Fresnel_Texture: public Texture {
+    float refractive_index;
+    public:
+        Fresnel_Texture(float refractive_index) {
+            this->refractive_index = refractive_index;
+        }
+
+        virtual Vec3 value(Vec3 uv, Hit_Record &record) const {
+            float cosine = -record.ray.directionVector().normalized().dot(record.normal);
+            float data = schlick(cosine, refractive_index);
+            return Vec3(data, data, data);
         }
 };
 

@@ -28,7 +28,7 @@ class Lambertian: public Material {
         virtual bool scatter(Ray &ray_in, Hit_Record &record, Vec3 &attenuation, Ray &scattered) const {
             Vec3 target = record.point + record.normal + randomInUnitSphere();
             scattered = Ray(record.point, target-record.point);
-            attenuation = albedo->value(Vec3(0,0,0), record.point);
+            attenuation = albedo->value(Vec3(0,0,0), record);
             return true;
         }
 };

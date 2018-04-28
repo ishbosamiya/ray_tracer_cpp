@@ -24,6 +24,7 @@ bool Sphere::hit(Ray &ray, float t_min, float t_max, Hit_Record &record) const {
             record.point = ray.pointAtParameter(record.t);
             record.normal = (record.point - center) / radius;
             record.material_pointer = material;
+            record.ray = ray;
             return true;
         }
         temp = (-b + discriminant_sqrt)/(2.0*a);
@@ -32,6 +33,7 @@ bool Sphere::hit(Ray &ray, float t_min, float t_max, Hit_Record &record) const {
             record.point = ray.pointAtParameter(record.t);
             record.normal = (record.point - center) / radius;
             record.material_pointer = material;
+            record.ray = ray;
             return true;
         }
     }

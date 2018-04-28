@@ -8,6 +8,7 @@
 class Material;
 
 struct Hit_Record {
+    Ray ray;
     float t;
     Vec3 point;
     Vec3 normal;
