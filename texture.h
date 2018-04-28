@@ -4,6 +4,8 @@
 #include <math.h>
 
 #include "vec3.h"
+#include "hitable.h"
+#include "material_functions.h"
 
 class Texture
 {
