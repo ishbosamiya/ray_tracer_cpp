@@ -7,8 +7,8 @@
 #include "ray.h"
 #include "hitable.h"
 
-Vec3 reflect(Vec3 incident, Vec3 normal);
-bool refract(Vec3 incident, Vec3 normal, float refractive_index, Vec3 &refracted);
+Vec3 reflect(const Hit_Record &record);
+bool refract(const Hit_Record &record, float refractive_index, Vec3 &refracted);
 float schlick(float cosine, float refractive_index);
 float fresnelDielectric(float refractive_index, Hit_Record &record);
 
