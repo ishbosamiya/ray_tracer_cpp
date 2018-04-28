@@ -11,9 +11,9 @@ class Ray {
         Ray();
         Ray(const Vec3 &origin, const Vec3 &direction);
 
-        inline Vec3 originVector() { return origin;}
-        inline Vec3 directionVector() { return direction;}
-        inline Vec3 pointAtParameter(float t) { return origin + (direction * t);}
+        inline Vec3 originVector() const { return origin;}
+        inline Vec3 directionVector() const { return direction;}
+        inline Vec3 pointAtParameter(float t) const { return origin + (direction * t);}
 
         virtual ~Ray();
 };
