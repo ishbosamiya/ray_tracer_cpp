@@ -28,16 +28,18 @@ class Constant_Texture: public Texture {
 class Checker_Texture: public Texture {
     Texture *texture0;
     Texture *texture1;
+    float grid_size;
 
     public:
         Checker_Texture() {}
-        Checker_Texture(Texture *texture0, Texture *texture1) {
+        Checker_Texture(Texture *texture0, Texture *texture1, float grid_size = 10.0) {
             this->texture0 = texture0;
             this->texture1 = texture1;
+            this->grid_size = grid_size;
         }
 
         virtual Vec3 value(Vec3 uv, Hit_Record &record) const {
-            float sines = sin(10.0*record.point.x())*sin(10.0*record.point.y())*sin(10.0*record.point.z());
+            float sines = sin(grid_size*record.point.x())*sin(grid_size*record.point.y())*sin(grid_size*record.point.z());
             if(sines < 0) {
                 return texture1->value(uv, record);
             }

@@ -10,6 +10,6 @@
 Vec3 reflect(const Hit_Record &record);
 bool refract(const Hit_Record &record, float refractive_index, Vec3 &refracted);
 float schlick(float cosine, float refractive_index);
-float fresnelDielectric(float refractive_index, Hit_Record &record);
+float fresnelDielectric(float refractive_index, const Hit_Record &record);
 
 #endif // MATERIAL_FUNTIONS_H

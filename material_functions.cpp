@@ -45,7 +45,7 @@ float schlick(float cosine, float refractive_index) {
     return result;
 }
 
-float fresnelDielectric(float refractive_index, Hit_Record &record) {
+float fresnelDielectric(float refractive_index, const Hit_Record &record) {
     float cosine = record.ray.directionVector().normalized().dot(record.normal);
     if(cosine > 0.0) {
         cosine *= refractive_index;

@@ -52,18 +52,27 @@ int main() {
     char *pixels = new char[width * height * 3];
     Vec3 *pixels_temp = new Vec3[width * height];
 
-    int list_size = 2;
-    Hitable **list = new Hitable*[list_size];
-    list[0] = new Sphere(Vec3(0.0, -1000.5, -1.0), 1000.0, new Lambertian(new Checker_Texture(new Constant_Texture(Vec3(0.2, 0.5, 0.1)),
-                                                                                             new Constant_Texture(Vec3(0.9, 0.9, 0.9)))));
-    list[1] = new Sphere(Vec3(0.0, 0.0, -1.0), 0.5, new Lambertian(new Constant_Texture(Vec3(0.1, 0.7, 0.5))));
-    BVH_Node *world = new BVH_Node(list, list_size, 0.0, 0.0);
-
     //Camera Properties
-    Vec3 look_from(0.0, 1.3, 0.0);
+    Vec3 look_from(0.0, 1.3, 1.0);
     Vec3 look_at(0.0, 0.0, -1.0);
     float aperture = 0.0; //this setting is the opposite to a real camera, larger value causes more depth of field
     float fov = 70.0;
+
+    int list_size;
+//    Hitable **list = new Hitable*[list_size];
+//    list[0] = new Sphere(Vec3(0.0, -1000.5, -1.0), 1000.0, new Lambertian(new Checker_Texture(new Constant_Texture(Vec3(0.2, 0.5, 0.1)),
+//                                                                                             new Constant_Texture(Vec3(0.9, 0.9, 0.9)))));
+//    list[1] = new Sphere(Vec3(-2.0, 0.0, -1.0), 0.5, new Lambertian(new Fresnel_Texture(1.0)));
+//    list[2] = new Sphere(Vec3(-1.0, 0.0, -1.0), 0.5, new Lambertian(new Fresnel_Texture(1.25)));
+//    list[3] = new Sphere(Vec3(0.0, 0.0, -1.0), 0.5, new Dielectric(1.5));
+//    list[4] = new Sphere(Vec3(1.0, 0.0, -1.0), 0.5, new Lambertian(new Fresnel_Texture(1.75)));
+//    list[5] = new Sphere(Vec3(2.0, 0.0, -1.0), 0.5, new Lambertian(new Fresnel_Texture(2.0)));
+
+    Hitable **list;
+    list = setupGridOfSpheres(look_from, look_at, aperture, fov, 5, list_size);
+
+    BVH_Node *world = new BVH_Node(list, list_size, 0.0, 0.0);
+
     Camera camera(look_from, look_at, Vec3(0.0, 1.0, 0.0), fov, (float)width/(float)height, aperture, (look_from - look_at).length());
 
     for(int s = 0; s < no_of_samples; s++) {
