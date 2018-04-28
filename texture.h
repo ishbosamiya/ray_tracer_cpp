@@ -55,8 +55,7 @@ class Fresnel_Texture: public Texture {
         }
 
         virtual Vec3 value(Vec3 uv, Hit_Record &record) const {
-            float cosine = -record.ray.directionVector().normalized().dot(record.normal);
-            float data = schlick(cosine, refractive_index);
+            float data = fresnelDielectric(refractive_index, record);
             return Vec3(data, data, data);
         }
 };
