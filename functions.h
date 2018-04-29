@@ -29,7 +29,7 @@ Hitable **randomScene(int &size);
 int getMilliCount();
 void printTime(long long int time);
 
-Hitable **setupGridOfSpheres(Vec3 &look_from, Vec3 &look_at, float &aperture, float &fov, int grid_size, int &list_size);
+Hitable **setupGridOfSpheres(Vec3 &look_from, Vec3 &look_at, float &aperture, float &fov, int grid_size, int &list_size, int type);
 
 int getIndex(int x, int y) {
     return (x + y * width) * 3;
@@ -181,7 +181,7 @@ void printTime(long long int time) {
     }
 }
 
-Hitable **setupGridOfSpheres(Vec3 &look_from, Vec3 &look_at, float &aperture, float &fov, int grid_size, int &list_size) {
+Hitable **setupGridOfSpheres(Vec3 &look_from, Vec3 &look_at, float &aperture, float &fov, int grid_size, int &list_size, int type) {
     int no_of_mats = 5;
     Material **mats;
     mats = new Material*[no_of_mats];
@@ -192,40 +192,81 @@ Hitable **setupGridOfSpheres(Vec3 &look_from, Vec3 &look_at, float &aperture, fl
                                                   new Constant_Texture(Vec3(0.2, 0.3, 0.1)), 20));
     mats[4] = new Lambertian( new Fresnel_Texture(1.5));
 
-    float root_2 = sqrt(2.0);
-    list_size = grid_size * grid_size * grid_size;
-    Hitable **list = new Hitable*[list_size];
-    float radius = 1.0;
-    Vec3 lower_left;
-    if(grid_size % 2 == 0) {
-        //lower_left = Vec3( -root_2 * grid_size * radius * 0.5, -root_2 * grid_size * radius * 0.5, -1.0);
-        lower_left = Vec3( -root_2 * grid_size * radius * 0.5, -root_2 * grid_size * radius * 0.5, root_2 * grid_size * radius * 0.5);
-    }
-    else {
-        //lower_left = Vec3(-1.0*radius*(grid_size - 1.0), -1.0*radius*(grid_size - 1.0), -1.0);
-        lower_left = Vec3(-1.0*radius*(grid_size - 1.0), -1.0*radius*(grid_size - 1.0), 1.0*radius*(grid_size - 1.0));
-    }
+    //3d cube
+    if(type % 3 == 0) {
+        float root_2 = sqrt(2.0);
+        list_size = grid_size * grid_size * grid_size;
+        Hitable **list = new Hitable*[list_size];
+        float radius = 1.0;
+        Vec3 lower_left(-1.0*radius*(grid_size - 1.0), -1.0*radius*(grid_size - 1.0), 1.0*radius*(grid_size - 1.0));
+        float distance_between_spheres_z = 2.0*radius + 0.0;
 
-    float distance_between_spheres_z = 2.0*radius + 0.0;
-    for(int x = 0; x < grid_size; x++) {
-        for(int y = 0; y < grid_size; y++) {
-            for(int z = 0; z < grid_size; z++) {
-                list[x + y * grid_size + z * grid_size*grid_size] = new Sphere(lower_left + Vec3((float)x*2.0*radius, (float)y*2.0*radius, -(z * distance_between_spheres_z)),
-                                                                             radius,
-                                                                             mats[(int)(randomBetweenZeroOne()*no_of_mats) % no_of_mats]);
+        for(int x = 0; x < grid_size; x++) {
+            for(int y = 0; y < grid_size; y++) {
+                for(int z = 0; z < grid_size; z++) {
+                    list[x + y * grid_size + z * grid_size*grid_size] = new Sphere(lower_left + Vec3((float)x*2.0*radius, (float)y*2.0*radius, -(z * distance_between_spheres_z)),
+                                                                                 radius,
+                                                                                 mats[(int)(randomBetweenZeroOne()*no_of_mats) % no_of_mats]);
+                }
             }
         }
+
+        //Camera Properties
+        look_from = Vec3(grid_size * 2.0 * radius, grid_size * 2.0 * radius, grid_size * 2.0 * radius);
+        look_at = Vec3(0.0, 0.0, 0.0);
+        aperture = 0.0; //this setting is the opposite to a real camera, larger value causes more depth of field
+        fov = 60.0;
+
+        return list;
     }
+    //2d grid
+    else if(type % 3 == 2) {
+        float root_2 = sqrt(2.0);
+        list_size = grid_size * grid_size;
+        Hitable **list = new Hitable*[list_size];
+        float radius = 1.0;
+        Vec3 lower_left(-1.0*radius*(grid_size - 1.0), -1.0*radius*(grid_size - 1.0), -1.0);
+        float distance_between_spheres_z = 2.0*radius + 0.0;
 
-    //Camera Properties
-    //look_from = Vec3(0.0, 0.0, grid_size * 2.0 * radius);
-    look_from = Vec3(grid_size * 2.0 * radius, grid_size * 2.0 * radius, grid_size * 2.0 * radius);
-    //look_at = Vec3(0.0, 0.0, -1.0);
-    look_at = Vec3(0.0, 0.0, 0.0);
-    aperture = 0.0; //this setting is the opposite to a real camera, larger value causes more depth of field
-    fov = 60.0;
+        for(int x = 0; x < grid_size; x++) {
+            for(int y = 0; y < grid_size; y++) {
+                list[x + y * grid_size] = new Sphere(lower_left + Vec3((float)x*2.0*radius, (float)y*2.0*radius, 0.0),
+                                                     radius,
+                                                     mats[(int)(randomBetweenZeroOne()*no_of_mats) % no_of_mats]);
+            }
+        }
 
-    return list;
+        //Camera Properties
+        look_from = Vec3(0.0, 0.0, grid_size * 2.0 * radius);
+        look_at = Vec3(0.0, 0.0, -1.0);
+        aperture = 0.0; //this setting is the opposite to a real camera, larger value causes more depth of field
+        fov = 60.0;
+
+        return list;
+    }
+    //single line
+    else if(type % 3 == 1) {
+        float root_2 = sqrt(2.0);
+        list_size = grid_size;
+        Hitable **list = new Hitable*[list_size];
+        float radius = 1.0;
+        Vec3 lower_left( -(grid_size - 1.0) * radius, 0.0, -1.0);
+        float distance_between_spheres_z = 2.0*radius + 0.0;
+
+        for(int x = 0; x < grid_size; x++) {
+            list[x] = new Sphere(lower_left + Vec3((float)x*2.0*radius, 0.0, 0.0),
+                                 radius,
+                                 mats[(int)x % no_of_mats]);
+        }
+
+        //Camera Properties
+        look_from = Vec3(0.0, 0.0, grid_size * 2.0 * radius);
+        look_at = Vec3(0.0, 0.0, -1.0);
+        aperture = 0.0; //this setting is the opposite to a real camera, larger value causes more depth of field
+        fov = 60.0;
+
+        return list;
+    }
 }
 
 #endif // FUNCTIONS_H

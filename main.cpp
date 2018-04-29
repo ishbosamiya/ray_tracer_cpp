@@ -69,7 +69,7 @@ int main() {
 //    list[5] = new Sphere(Vec3(2.0, 0.0, -1.0), 0.5, new Lambertian(new Fresnel_Texture(2.0)));
 
     Hitable **list;
-    list = setupGridOfSpheres(look_from, look_at, aperture, fov, 5, list_size);
+    list = setupGridOfSpheres(look_from, look_at, aperture, fov, 3, list_size, 3);
 
     BVH_Node *world = new BVH_Node(list, list_size, 0.0, 0.0);
 
