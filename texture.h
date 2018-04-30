@@ -65,10 +65,11 @@ class Fresnel_Texture: public Texture {
 
 class Noise_Texture: public Texture {
     Perlin noise;
+    float scale;
     public:
-        Noise_Texture() {}
+        Noise_Texture(float scale) { this->scale = scale;}
         virtual Vec3 value(Vec3 uv, Hit_Record &record) const {
-            return Vec3(1.0, 1.0, 1.0)*noise.noise(record.point);
+            return Vec3(1.0, 1.0, 1.0)*noise.noise(record.point * scale);
         }
 };
 
