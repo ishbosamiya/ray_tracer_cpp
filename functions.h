@@ -35,7 +35,7 @@ int getIndex(int x, int y) {
     return (x + y * width) * 3;
 }
 
-void writeToPPM(char *components, char *path) {
+void writeToPPM(char *components, char *path, int samples_completed) {
     ofstream fout;
     fout.open(path);
     if(!fout.is_open()) {
@@ -45,6 +45,7 @@ void writeToPPM(char *components, char *path) {
     fout << "P3" << endl;
     fout << width << " " << height << endl;
     fout << "255" << endl;
+    fout << "#samples " << samples_completed << endl;
     for(int y = height - 1; y >= 0; y--) {
         for(int x = 0; x < width; x++) {
             unsigned char r = components[getIndex(x, y) + 0];
@@ -194,7 +195,6 @@ Hitable **setupGridOfSpheres(Vec3 &look_from, Vec3 &look_at, float &aperture, fl
 
     //3d cube
     if(type % 3 == 0) {
-        float root_2 = sqrt(2.0);
         list_size = grid_size * grid_size * grid_size;
         Hitable **list = new Hitable*[list_size];
         float radius = 1.0;
@@ -206,7 +206,8 @@ Hitable **setupGridOfSpheres(Vec3 &look_from, Vec3 &look_at, float &aperture, fl
                 for(int z = 0; z < grid_size; z++) {
                     list[x + y * grid_size + z * grid_size*grid_size] = new Sphere(lower_left + Vec3((float)x*2.0*radius, (float)y*2.0*radius, -(z * distance_between_spheres_z)),
                                                                                  radius,
-                                                                                 mats[(int)(randomBetweenZeroOne()*no_of_mats) % no_of_mats]);
+                                                                                 //mats[(int)(randomBetweenZeroOne()*no_of_mats) % no_of_mats]);
+                                                                                 mats[(int)(x + y * grid_size + z * grid_size*grid_size) % no_of_mats]);
                 }
             }
         }
@@ -221,18 +222,17 @@ Hitable **setupGridOfSpheres(Vec3 &look_from, Vec3 &look_at, float &aperture, fl
     }
     //2d grid
     else if(type % 3 == 2) {
-        float root_2 = sqrt(2.0);
         list_size = grid_size * grid_size;
         Hitable **list = new Hitable*[list_size];
         float radius = 1.0;
         Vec3 lower_left(-1.0*radius*(grid_size - 1.0), -1.0*radius*(grid_size - 1.0), -1.0);
-        float distance_between_spheres_z = 2.0*radius + 0.0;
 
         for(int x = 0; x < grid_size; x++) {
             for(int y = 0; y < grid_size; y++) {
                 list[x + y * grid_size] = new Sphere(lower_left + Vec3((float)x*2.0*radius, (float)y*2.0*radius, 0.0),
                                                      radius,
-                                                     mats[(int)(randomBetweenZeroOne()*no_of_mats) % no_of_mats]);
+                                                     //mats[(int)(randomBetweenZeroOne()*no_of_mats) % no_of_mats]);
+                                                     mats[(int)(x + y * grid_size) % no_of_mats]);
             }
         }
 
@@ -246,12 +246,10 @@ Hitable **setupGridOfSpheres(Vec3 &look_from, Vec3 &look_at, float &aperture, fl
     }
     //single line
     else if(type % 3 == 1) {
-        float root_2 = sqrt(2.0);
         list_size = grid_size;
         Hitable **list = new Hitable*[list_size];
         float radius = 1.0;
         Vec3 lower_left( -(grid_size - 1.0) * radius, 0.0, -1.0);
-        float distance_between_spheres_z = 2.0*radius + 0.0;
 
         for(int x = 0; x < grid_size; x++) {
             list[x] = new Sphere(lower_left + Vec3((float)x*2.0*radius, 0.0, 0.0),

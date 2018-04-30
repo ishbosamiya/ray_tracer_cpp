@@ -64,7 +64,6 @@ class Dielectric: public Material {
             attenuation = Vec3(1.0, 1.0, 1.0);
             Vec3 refracted;
             float reflection_probability;
-            float cosine;
 
             if(refract(record, relative_ri, refracted)) {
                 reflection_probability = fresnelDielectric(refractive_index, record);
