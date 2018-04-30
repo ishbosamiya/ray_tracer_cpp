@@ -6,6 +6,7 @@
 #include "vec3.h"
 #include "hitable.h"
 #include "material_functions.h"
+#include "perlin.h"
 
 class Texture
 {
@@ -59,6 +60,15 @@ class Fresnel_Texture: public Texture {
         virtual Vec3 value(Vec3 uv, Hit_Record &record) const {
             float data = fresnelDielectric(refractive_index, record);
             return Vec3(data, data, data);
+        }
+};
+
+class Noise_Texture: public Texture {
+    Perlin noise;
+    public:
+        Noise_Texture() {}
+        virtual Vec3 value(Vec3 uv, Hit_Record &record) const {
+            return Vec3(1.0, 1.0, 1.0)*noise.noise(record.point);
         }
 };
 
