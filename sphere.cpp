@@ -46,5 +46,5 @@ bool Sphere::boundingBox(float time0, float time1, AABB &box) const {
 }
 
 Sphere::~Sphere() {
-    delete material;
+
 }

@@ -69,7 +69,9 @@ class Noise_Texture: public Texture {
     public:
         Noise_Texture(float scale) { this->scale = scale;}
         virtual Vec3 value(Vec3 uv, Hit_Record &record) const {
-            return Vec3(1.0, 1.0, 1.0)*noise.noise(record.point * scale);
+            //return Vec3(1.0, 1.0, 1.0)*noise.noise(record.point * scale);
+            //return Vec3(1.0, 1.0, 1.0) * 0.5 * (1.0 + noise.turbulence(record.point * scale));
+            return Vec3(1.0, 1.0, 1.0) * 0.5 * (1.0 + sin(scale * record.point.z() + 10.0*noise.turbulence(record.point)));
         }
 };
 
