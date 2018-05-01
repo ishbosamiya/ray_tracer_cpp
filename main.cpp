@@ -62,15 +62,16 @@ int main() {
     Vec3 look_from(13.0, 2.0, 2.0);
     Vec3 look_at(0.0, 0.0, -1.0);
     float aperture = 0.0; //this setting is the opposite to a real camera, larger value causes more depth of field
-    float fov = 20.0;
+    float fov = 40.0;
 
 
-    Texture *perlin_texture = new Noise_Texture();
+    Texture *perlin_texture = new Noise_Texture(1.0);
     int list_size = 2;
     Hitable **list = new Hitable*[list_size];
     list[0] = new Sphere(Vec3(0.0, -1000, -1.0), 1000.0, new Lambertian(perlin_texture));
     list[1] = new Sphere(Vec3(0.0, 2.0, -1.0), 2.0, new Lambertian(perlin_texture));
 
+//    int list_size;
 //    Hitable **list;
 //    list = setupGridOfSpheres(look_from, look_at, aperture, fov, 8, list_size, 3);
 
@@ -105,7 +106,7 @@ int main() {
                 pixels[getIndex(x, y) + 2] = temp_color[2] * 255;
             }
         }
-        if(s % 4 == 1) {
+        if((s + 1) % 4 == 0) {
             writeToPPM(pixels, "image.ppm", s + 1);
         }
         if(s == 0) {

@@ -183,7 +183,7 @@ void printTime(long long int time) {
 }
 
 Hitable **setupGridOfSpheres(Vec3 &look_from, Vec3 &look_at, float &aperture, float &fov, int grid_size, int &list_size, int type) {
-    int no_of_mats = 5;
+    int no_of_mats = 6;
     Material **mats;
     mats = new Material*[no_of_mats];
     mats[0] = new Lambertian( new Constant_Texture(Vec3(0.2, 0.6, 0.6)));
@@ -192,6 +192,8 @@ Hitable **setupGridOfSpheres(Vec3 &look_from, Vec3 &look_at, float &aperture, fl
     mats[3] = new Lambertian( new Checker_Texture(new Constant_Texture(Vec3(0.9, 0.9, 0.9)),
                                                   new Constant_Texture(Vec3(0.2, 0.3, 0.1)), 20));
     mats[4] = new Lambertian( new Fresnel_Texture(1.5));
+    Texture *perlin = new Noise_Texture(1.0);
+    mats[5] = new Lambertian(perlin);
 
     //3d cube
     if(type % 3 == 0) {

@@ -5,14 +5,10 @@ float Perlin::noise(const Vec3 &p) const {
     float v = p.y() - floor(p.y());
     float w = p.z() - floor(p.z());
 
-    u = u*u*(3-2*u);
-    v = v*v*(3-2*v);
-    w = w*w*(3-2*w);
-
     int i = floor(p.x());
     int j = floor(p.y());
     int k = floor(p.z());
-    float c[2][2][2];
+    Vec3 c[2][2][2];
     for(int di = 0; di < 2; di++) {
         for(int dj = 0; dj < 2; dj++) {
             for(int dk = 0; dk < 2; dk++) {
@@ -26,24 +22,42 @@ float Perlin::noise(const Vec3 &p) const {
     return trilinearInterpolation(c, u, v, w);
 }
 
-float trilinearInterpolation(float c[2][2][2], float u, float v, float w) {
+float Perlin::turbulence(const Vec3 &p, int depth) const {
+    float accum = 0;
+    Vec3 temp_p = p;
+    float weight = 1.0;
+    for(int i = 0; i < depth; i++) {
+        accum += weight*noise(temp_p);
+        weight *= 0.5;
+        temp_p *= 2;
+    }
+    return fabs(accum);
+}
+
+float trilinearInterpolation(Vec3 c[2][2][2], float u, float v, float w) {
+    float uu = u*u*(3.0-2.0*u);
+    float vv = v*v*(3.0-2.0*v);
+    float ww = w*w*(3.0-2.0*w);
     float accum = 0;
     for(int i = 0; i < 2; i++) {
         for(int j = 0; j < 2; j++) {
             for(int k = 0; k < 2; k++) {
-                accum += (i*u + (1 - i)*(1 - u))*
-                            (j*v + (1 - j)*(1 - v))*
-                            (k*w + (1 - k)*(1 - w))*c[i][j][k];
+                Vec3 weight_v(u-i, v-j, w-k);
+                accum += (i*uu + (1.0 - i)*(1.0 - uu))*
+                            (j*vv + (1.0 - j)*(1.0 - vv))*
+                            (k*ww + (1.0 - k)*(1.0 - ww))*(weight_v.dot(c[i][j][k]));
             }
         }
     }
     return accum;
 }
 
-static float *perlinGenerate() {
-    float *p = new float[256];
+static Vec3 *perlinGenerate() {
+    Vec3 *p = new Vec3[256];
     for(int i = 0; i < 256; i++) {
-        p[i] = randomBetweenZeroOne();
+        p[i] = Vec3(-1.0 + 2.0*randomBetweenZeroOne(),
+                    -1.0 + 2.0*randomBetweenZeroOne(),
+                    -1.0 + 2.0*randomBetweenZeroOne()).normalized();
     }
     return p;
 }
@@ -67,7 +81,7 @@ static int *perlinGeneratePerm() {
     return p;
 }
 
-float *Perlin::ran_float = perlinGenerate();
+Vec3 *Perlin::ran_float = perlinGenerate();
 int *Perlin::perm_x = perlinGeneratePerm();
 int *Perlin::perm_y = perlinGeneratePerm();
 int *Perlin::perm_z = perlinGeneratePerm();
