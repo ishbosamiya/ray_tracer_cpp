@@ -36,8 +36,12 @@ BVH_Node *cornellBox() {
     list[i++] = new XZ_Rect(0.0, 555.0, 0.0, 555.0, 0.0, white);
     list[i++] = new Flip_Normals(new XY_Rect(0.0, 555.0, 0.0, 555.0, 555.0, white));
 
-    list[i++] = new Box(Vec3(130.0, 0.0, 65.0), Vec3(295.0, 165.0, 230.0), white);
-    list[i++] = new Box(Vec3(265.0, 0.0, 295.0), Vec3(430.0, 330.0, 460.0), white);
+    list[i++] = new Translate( new Rotate_Y( new Box(Vec3(0.0, 0.0, 0.0), Vec3(165.0, 165.0, 165.0), white)
+                                            , -18)
+                              , Vec3(130.0, 0.0, 65.0));
+    list[i++] = new Translate( new Rotate_Y( new Box(Vec3(0.0, 0.0, 0.0), Vec3(165.0, 330.0, 165.0), white)
+                                            , 15)
+                              , Vec3(265.0, 0.0, 295.0));
 
     return new BVH_Node(list, 8, 0.0, 0.0);
 }

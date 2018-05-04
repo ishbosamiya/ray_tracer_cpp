@@ -18,6 +18,7 @@ class Vec3
         float b() const { return m_elements[2];}
 
         float operator[] (int i) const {return m_elements[i];}
+        float& operator[](int i) { return m_elements[i]; }
 
         Vec3& operator+= (const Vec3 &v3);
         Vec3& operator-= (const Vec3 &v3);
