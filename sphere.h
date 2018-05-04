@@ -1,12 +1,15 @@
 #ifndef SPHERE_H
 #define SPHERE_H
 
+#include <math.h>
 
 #include "vec3.h"
 #include "ray.h"
 #include "hitable.h"
 #include "material.h"
 #include "aabb.h"
+
+void getSphereUV(const Vec3 &point, Vec3 &uv);
 
 class Sphere: public Hitable {
     Vec3 center;

@@ -1,5 +1,7 @@
 #include "sphere.h"
 
+#define M_PI 3.141592653
+
 Sphere::Sphere() {
     material = nullptr;
 }
@@ -23,6 +25,7 @@ bool Sphere::hit(Ray &ray, float t_min, float t_max, Hit_Record &record) const {
             record.t = temp;
             record.point = ray.pointAtParameter(record.t);
             record.normal = (record.point - center) / radius;
+            getSphereUV(record.point, record.uv);
             record.material_pointer = material;
             record.ray = ray;
             return true;
@@ -32,6 +35,7 @@ bool Sphere::hit(Ray &ray, float t_min, float t_max, Hit_Record &record) const {
             record.t = temp;
             record.point = ray.pointAtParameter(record.t);
             record.normal = (record.point - center) / radius;
+            getSphereUV(record.point, record.uv);
             record.material_pointer = material;
             record.ray = ray;
             return true;
@@ -47,4 +51,12 @@ bool Sphere::boundingBox(float time0, float time1, AABB &box) const {
 
 Sphere::~Sphere() {
 
+}
+
+void getSphereUV(const Vec3 &point, Vec3 &uv) {
+    float phi = atan2(point.z(), point.x());
+    float theta = asin(point.y());
+    float u = 1.0 - (phi + M_PI) / (2.0 * M_PI);
+    float v = (theta + M_PI / 2.0) / M_PI;
+    uv = Vec3(u, v, 0.0);
 }

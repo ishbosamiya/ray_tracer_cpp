@@ -15,6 +15,9 @@ extern Vec3 randomInUnitSphere();
 class Material {
     public:
         virtual bool scatter(Ray &ray_in, Hit_Record &record, Vec3 &attenuation, Ray &scattered) const = 0;
+        virtual Vec3 emitted(Vec3 uv, Hit_Record &record) const {
+            return Vec3(0.0, 0.0, 0.0);
+        }
 };
 
 //The Materials
@@ -80,6 +83,19 @@ class Dielectric: public Material {
             }
 
             return true;
+        }
+};
+
+class Diffuse_Light: public Material {
+    Texture *emit_texture;
+
+    public:
+        Diffuse_Light(Texture *emit_texture) { this->emit_texture = emit_texture;}
+        virtual bool scatter(Ray &ray_in, Hit_Record &record, Vec3 &attenuation, Ray &scattered) const {
+            return false;
+        }
+        virtual Vec3 emitted(Vec3 uv, Hit_Record &record) const {
+            return emit_texture->value(uv, record);
         }
 };
 

@@ -59,17 +59,18 @@ int main() {
 //    float aperture = 0.0; //this setting is the opposite to a real camera, larger value causes more depth of field
 //    float fov = 70.0;
 
-    Vec3 look_from(13.0, 2.0, 2.0);
+    Vec3 look_from(13.0, 6.0, 2.0);
     Vec3 look_at(0.0, 0.0, -1.0);
     float aperture = 0.0; //this setting is the opposite to a real camera, larger value causes more depth of field
     float fov = 40.0;
 
 
     Texture *perlin_texture = new Noise_Texture(1.0);
-    int list_size = 2;
+    int list_size = 3;
     Hitable **list = new Hitable*[list_size];
     list[0] = new Sphere(Vec3(0.0, -1000, -1.0), 1000.0, new Lambertian(perlin_texture));
     list[1] = new Sphere(Vec3(0.0, 2.0, -1.0), 2.0, new Lambertian(perlin_texture));
+    list[2] = new Sphere(Vec3(0.0, 15.0, -1.0), 10.0, new Diffuse_Light(new Constant_Texture(Vec3(4.0, 3.54, 1.7))));
 
 //    int list_size;
 //    Hitable **list;
@@ -101,9 +102,9 @@ int main() {
                 temp_color = Vec3(sqrt(temp_color[0]), sqrt(temp_color[1]), sqrt(temp_color[2])); //gamma correction
 
                 pixels_temp[x + y * width] = color;
-                pixels[getIndex(x, y) + 0] = temp_color[0] * 255;
-                pixels[getIndex(x, y) + 1] = temp_color[1] * 255;
-                pixels[getIndex(x, y) + 2] = temp_color[2] * 255;
+                pixels[getIndex(x, y) + 0] = max(min(temp_color[0] * 255, 255.0f), 0.0f);
+                pixels[getIndex(x, y) + 1] = max(min(temp_color[1] * 255, 255.0f), 0.0f);
+                pixels[getIndex(x, y) + 2] = max(min(temp_color[2] * 255, 255.0f), 0.0f);
             }
         }
         if((s + 1) % 4 == 0) {

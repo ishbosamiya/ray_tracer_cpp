@@ -62,17 +62,16 @@ Vec3 backgroundColor(Ray &ray, Hitable *world, int depth) {
     if(world->hit(ray, 0.001, 10000.0, record)) {
         Ray scattered;
         Vec3 attenuation;
+        Vec3 emitted = record.material_pointer->emitted(record.uv, record);
         if(depth < 50 && record.material_pointer->scatter(ray, record, attenuation, scattered)) {
-            return attenuation*backgroundColor(scattered, world, depth+1);
+            return emitted + attenuation*backgroundColor(scattered, world, depth+1);
         }
         else {
-            return Vec3(0.0, 0.0, 0.0);
+            return emitted;
         }
     }
     else {
-        Vec3 unit_direction = ray.directionVector().normalized();
-        float t = (unit_direction.y() + 1.0)*0.5;
-        return Vec3(1.0, 1.0, 1.0)*(1.0 - t) + Vec3(0.5, 0.7, 1.0)*t;
+        return Vec3(0.0, 0.0, 0.0);
     }
 }
 
