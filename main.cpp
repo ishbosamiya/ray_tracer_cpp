@@ -11,6 +11,8 @@
 #include "functions.h"
 #include "bvh_node.h"
 #include "texture.h"
+#include "rectangles.h"
+#include "test_scenes.h"
 
 using namespace std;
 
@@ -65,12 +67,15 @@ int main() {
     float fov = 40.0;
 
 
-    Texture *perlin_texture = new Noise_Texture(1.0);
-    int list_size = 3;
-    Hitable **list = new Hitable*[list_size];
-    list[0] = new Sphere(Vec3(0.0, -1000, -1.0), 1000.0, new Lambertian(perlin_texture));
-    list[1] = new Sphere(Vec3(0.0, 2.0, -1.0), 2.0, new Lambertian(perlin_texture));
-    list[2] = new Sphere(Vec3(0.0, 15.0, -1.0), 10.0, new Diffuse_Light(new Constant_Texture(Vec3(4.0, 3.54, 1.7))));
+//    Texture *perlin_texture = new Noise_Texture(1.0);
+//    int list_size = 3;
+//    Hitable **list = new Hitable*[list_size];
+//    list[0] = new Sphere(Vec3(0.0, -1000, -1.0), 1000.0, new Lambertian(perlin_texture));
+//    list[1] = new Sphere(Vec3(0.0, 2.0, -1.0), 2.0, new Lambertian(perlin_texture));
+//    list[2] = new Sphere(Vec3(0.0, 15.0, -1.0), 10.0, new Diffuse_Light(new Constant_Texture(Vec3(4.0, 3.54, 1.7))));
+
+    int list_size = 4;
+    Hitable **list = simpleLight();
 
 //    int list_size;
 //    Hitable **list;
