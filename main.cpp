@@ -56,34 +56,15 @@ int main() {
     Vec3 *pixels_temp = new Vec3[width * height];
 
     //Camera Properties
-//    Vec3 look_from(0.0, 1.3, 1.0);
-//    Vec3 look_at(0.0, 0.0, -1.0);
-//    float aperture = 0.0; //this setting is the opposite to a real camera, larger value causes more depth of field
-//    float fov = 70.0;
-
-    Vec3 look_from(13.0, 6.0, 2.0);
-    Vec3 look_at(0.0, 0.0, -1.0);
+    Vec3 look_from(278.0, 278.0, -800.0);
+    Vec3 look_at(278.0, 278.0, 0.0);
+    float distance_to_focus = 10.0;
     float aperture = 0.0; //this setting is the opposite to a real camera, larger value causes more depth of field
     float fov = 40.0;
 
+    BVH_Node *world = cornellBox();
 
-//    Texture *perlin_texture = new Noise_Texture(1.0);
-//    int list_size = 3;
-//    Hitable **list = new Hitable*[list_size];
-//    list[0] = new Sphere(Vec3(0.0, -1000, -1.0), 1000.0, new Lambertian(perlin_texture));
-//    list[1] = new Sphere(Vec3(0.0, 2.0, -1.0), 2.0, new Lambertian(perlin_texture));
-//    list[2] = new Sphere(Vec3(0.0, 15.0, -1.0), 10.0, new Diffuse_Light(new Constant_Texture(Vec3(4.0, 3.54, 1.7))));
-
-    int list_size = 4;
-    Hitable **list = simpleLight();
-
-//    int list_size;
-//    Hitable **list;
-//    list = setupGridOfSpheres(look_from, look_at, aperture, fov, 8, list_size, 3);
-
-    BVH_Node *world = new BVH_Node(list, list_size, 0.0, 0.0);
-
-    Camera camera(look_from, look_at, Vec3(0.0, 1.0, 0.0), fov, (float)width/(float)height, aperture, (look_from - look_at).length());
+    Camera camera(look_from, look_at, Vec3(0.0, 1.0, 0.0), fov, (float)width/(float)height, aperture, distance_to_focus);
 
     for(int s = 0; s < no_of_samples; s++) {
         for(int y = height - 1; y >= 0; y--) {
