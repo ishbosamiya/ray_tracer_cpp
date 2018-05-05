@@ -99,4 +99,18 @@ class Diffuse_Light: public Material {
         }
 };
 
+class Isotropic_Material: public Material {
+    Texture *albedo;
+
+    public:
+        Isotropic_Material(Texture *albedo) {
+            this->albedo = albedo;
+        }
+        virtual bool scatter(Ray &ray_in, Hit_Record &record, Vec3 &attenuation, Ray &scattered) const {
+            scattered = Ray(record.point, randomInUnitSphere());
+            attenuation = albedo->value(record.uv, record);
+            return true;
+        }
+};
+
 #endif // MATERIAL_H

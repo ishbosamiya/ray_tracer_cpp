@@ -62,7 +62,7 @@ int main() {
     float aperture = 0.0; //this setting is the opposite to a real camera, larger value causes more depth of field
     float fov = 40.0;
 
-    BVH_Node *world = cornellBox();
+    BVH_Node *world = cornellBoxSmoke();
 
     Camera camera(look_from, look_at, Vec3(0.0, 1.0, 0.0), fov, (float)width/(float)height, aperture, distance_to_focus);
 
